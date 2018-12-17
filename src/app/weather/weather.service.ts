@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Weather } from './weather';
-import { Forecast } from './forecast';
+import { Weather } from './weather.model';
+import { Forecast } from './forecast.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -24,30 +24,39 @@ export class WeatherService {
   }
 
   public mapResult(result: any): Weather {
-    const weatherInfo = new Weather();
-    weatherInfo.city = `${result.location.city}, ${result.location.country}`;
-    weatherInfo.date = result.item.condition.date;
-    weatherInfo.humidity = result.atmosphere.humidity;
-    weatherInfo.info = result.item.condition.text;
-    weatherInfo.maxtemperature = result.item.forecast[0].high;
-    weatherInfo.mintemperature = result.item.forecast[0].low;
-    weatherInfo.pressure = result.atmosphere.pressure;
-    weatherInfo.sunrise = result.astronomy.sunrise;
-    weatherInfo.sunset = result.astronomy.sunset;
-    weatherInfo.temperature = result.item.condition.temp;
-    weatherInfo.winddirection = result.wind.direction;
-    weatherInfo.windspeed = result.wind.speed;
-    weatherInfo.forecasts = new Array<Forecast>();
-    for (const forecast of result.item.forecast) {
-      const newForecast = new Forecast();
-      newForecast.date = forecast.date;
-      newForecast.day = forecast.day;
-      newForecast.maxTemperature = forecast.high;
-      newForecast.minTemperature = forecast.low;
-      newForecast.info = forecast.text;
-      weatherInfo.forecasts.push(newForecast);
+    const weatherInfo = this.mapWeather(result);
+    
+    for (const forecast of result.item.forecast) {     
+      weatherInfo.forecasts.push(this.mapForecast(forecast));
     }
     return weatherInfo;
   }
 
+  private mapForecast(yahooForecast: any): Forecast{
+    const newForecast = new Forecast();
+      newForecast.date = yahooForecast.date;
+      newForecast.day = yahooForecast.day;
+      newForecast.maxTemperature = yahooForecast.high;
+      newForecast.minTemperature = yahooForecast.low;
+      newForecast.info = yahooForecast.text;
+      return newForecast;
+  }
+
+  private mapWeather(yahooWeather: any): Weather{
+    const weatherInfo = new Weather();
+    weatherInfo.city = `${yahooWeather.location.city}, ${yahooWeather.location.country}`;
+    weatherInfo.date = yahooWeather.item.condition.date;
+    weatherInfo.humidity = yahooWeather.atmosphere.humidity;
+    weatherInfo.info = yahooWeather.item.condition.text;
+    weatherInfo.maxtemperature = yahooWeather.item.forecast[0].high;
+    weatherInfo.mintemperature = yahooWeather.item.forecast[0].low;
+    weatherInfo.pressure = yahooWeather.atmosphere.pressure;
+    weatherInfo.sunrise = yahooWeather.astronomy.sunrise;
+    weatherInfo.sunset = yahooWeather.astronomy.sunset;
+    weatherInfo.temperature = yahooWeather.item.condition.temp;
+    weatherInfo.winddirection = yahooWeather.wind.direction;
+    weatherInfo.windspeed = yahooWeather.wind.speed;
+    weatherInfo.forecasts = new Array<Forecast>();
+    return weatherInfo;
+  }
 }

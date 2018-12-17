@@ -1,4 +1,4 @@
-import { Forecast } from './forecast';
+import { Forecast } from './forecast.model';
 
 export class Weather {
     city: string;
