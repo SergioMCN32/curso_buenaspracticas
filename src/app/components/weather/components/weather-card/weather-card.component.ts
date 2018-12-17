@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Weather } from './weather.model';
-import { Forecast } from './forecast.model';
-import { WeatherService } from './weather.service';
+import { Weather } from '../models/weather.model';
 import { ActivatedRoute } from '@angular/router';
+import { WeatherService } from 'src/app/weather/weather.service';
 
 @Component({
   selector: 'app-weather-card',
